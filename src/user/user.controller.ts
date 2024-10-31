@@ -8,12 +8,18 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserRoles } from './enums/user-roles.enum';
 
 @Controller('user')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+//@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('create')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(UserRoles.Admin)
+  async createUserAdmin(@Body() createUserDto: CreateUserDto) {
+    return this.userService.addNewUser(createUserDto);
+  }
+
+  @Post('create/noAdmin')
   async createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.addNewUser(createUserDto);
   }
