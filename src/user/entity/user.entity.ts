@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, JoinTable, ManyToMany } from 'typeorm';
 import { UserRoles } from '../enums/user-roles.enum';
+import { SubjectEntity } from '../../subject/entity/subject.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -27,4 +28,8 @@ export class UserEntity {
     default: UserRoles.Student, // Por defecto, todos los usuarios son estudiantes
   })
   role: UserRoles;
+  
+  @ManyToMany(() => SubjectEntity, { eager: true }) // Carga automática de asignaturas
+  @JoinTable() // Crea una tabla intermedia para usuarios y asignaturas
+  subjects: SubjectEntity[];
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Patch, NotFoundException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -44,9 +44,45 @@ export class UserController {
     return this.userService.getAllUsers();
   }
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  //@UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get(':id')
   async getUserById(@Param('id') id: string) {
     return this.userService.findUserById(parseInt(id));
   }
+
+  //endpoint para asignar una asignatura a un usuario(por id) por nombre de asignatura(por nombre)
+  //usado para estudiantes, basicamente inscribirle los ramos
+  //usado para profesores, indicando que asignaturas las da dicho profesor
+  //(usado para ver respuestas podemos iterar sobre las asignaturas 
+  // y preguntar al back que encuestas tienen el id del profesor)
+  @Patch(':userId/assign-subject/:subjectName')
+  async assignSubjectToStudent(
+    @Param('userId') userId: number,
+    @Param('subjectName') subjectName: string,
+  ) {
+    return this.userService.assignSubjectByName(userId, subjectName);
+  }
+
+
+   //endpoint para quitar una asignatura a un usuario(por id) por nombre de asignatura
+   @Patch(':userId/remove-subject/:subjectName')
+   async removeSubjectFromStudent(
+     @Param('userId') userId: number,
+     @Param('subjectName') subjectName: string,
+   ) {
+     return this.userService.removeSubjectByName(userId, subjectName);
+   }
+
+  //buscador de profes xd
+  @Get(':userId/subjects')
+  async getSubjectsForTeacher(@Param('userId') userId: number) {
+    const user = await this.userService.findUserById(userId);
+    if (!user || user.role !== UserRoles.Teacher) {
+      throw new NotFoundException('Profesor no encontrado');
+    }
+    return user.subjects;
+  }
+
+  
+
 }

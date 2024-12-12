@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsArray, IsEmail, IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
 import { UserRoles } from '../enums/user-roles.enum';
 
 export class CreateUserDto {
@@ -19,4 +19,7 @@ export class CreateUserDto {
 
   @IsEnum(UserRoles)
   role: UserRoles;
+
+  @IsArray()
+  subjects: string[];
 }
