@@ -56,7 +56,7 @@ export class UserController {
   //(usado para ver respuestas podemos iterar sobre las asignaturas 
   // y preguntar al back que encuestas tienen el id del profesor)
   @Patch(':userId/assign-subject/:subjectName')
-  async assignSubjectToStudent(
+  async assignSubjectToStudentOrTeacher(
     @Param('userId') userId: number,
     @Param('subjectName') subjectName: string,
   ) {

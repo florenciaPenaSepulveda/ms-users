@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { UserEntity } from './entity/user.entity';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -136,12 +136,12 @@ export class UserService {
   
   async assignSubjectByName(userId: number, subjectName: string): Promise<UserEntity> {
     const user = await this.userRepository.findOne({
-      where: { id: userId, role: UserRoles.Student },
+      where: { id: userId,  role: In([UserRoles.Teacher, UserRoles.Student]) },
       relations: ['subjects'],
     });
   
     if (!user) {
-      throw new NotFoundException('Estudiante no encontrado');
+      throw new NotFoundException('Estudiante o profesor no encontrado');
     }
   
     const subject = await this.subjectRepository.findOne({ where: { asignatura: subjectName } });
@@ -164,7 +164,7 @@ export class UserService {
   
   async removeSubjectByName(userId: number, subjectName: string): Promise<UserEntity> {
     const user = await this.userRepository.findOne({
-      where: { id: userId, role: UserRoles.Student },
+      where: { id: userId,  role: In([UserRoles.Teacher, UserRoles.Student]) },
       relations: ['subjects'],
     });
     if (!user) {
