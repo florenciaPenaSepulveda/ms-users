@@ -73,12 +73,12 @@ export class UserController {
      return this.userService.removeSubjectByName(userId, subjectName);
    }
 
-  //buscador de profes xd
+  //retorna las asignaturas de un profe o estudiante
   @Get(':userId/subjects')
   async getSubjectsForTeacher(@Param('userId') userId: number) {
     const user = await this.userService.findUserById(userId);
-    if (!user || user.role !== UserRoles.Teacher) {
-      throw new NotFoundException('Profesor no encontrado');
+    if (!user || user.role === UserRoles.Admin) {
+      throw new NotFoundException('Profesor o estudiante no encontrado');
     }
     return user.subjects;
   }
