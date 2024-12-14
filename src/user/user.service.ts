@@ -88,6 +88,12 @@ export class UserService {
     return this.userRepository.find();
   }
 
+  async getAllStudents() {
+    return this.userRepository.createQueryBuilder('user')
+      .where('user.role = :role', { role: UserRoles.Student })      
+      .getMany();
+  }
+
   // Obtener un usuario por ID (acceso público)
   async findUserById(id: number): Promise<UserEntity> {
     const user = await this.userRepository.findOne({ where: { id } });

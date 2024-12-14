@@ -43,6 +43,12 @@ export class UserController {
   async getAllUsers() {
     return this.userService.getAllUsers();
   }
+  //gettear all students
+  @Get('students')
+  async getAllStudent() {
+    return this.userService.getAllStudents()
+  }
+
 
   //@UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get(':id')
