@@ -189,6 +189,18 @@ export class UserService {
     user.subjects = user.subjects.filter(sub => sub.asignatura !== subject.asignatura);
     return this.userRepository.save(user);
   }
+
+
+ async getAllStudentsBySubject(subject: string) {
+  return this.userRepository.createQueryBuilder('user')
+    .innerJoin('user.subjects', 'subject')
+    .where('user.role = :role', { role: UserRoles.Student })
+    .andWhere('subject.asignatura = :subject', { subject })
+    .getMany();
+}
+
+
+
   
 
 

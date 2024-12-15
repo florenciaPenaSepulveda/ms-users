@@ -89,6 +89,10 @@ export class UserController {
     return user.subjects;
   }
 
-  
+  // Endpoint para obtener los estudiantes por asignatura
+  @Get('students/subject/:subject')
+  async getAllStudentsBySubject(@Param('subject') subject: string) {
+    return await this.userService.getAllStudentsBySubject(subject);
+  }
 
 }
